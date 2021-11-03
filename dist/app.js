@@ -37,12 +37,11 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 var express = require("express");
+//import AutoGitUpdate from 'auto-git-update';
 var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
-var fs = require('fs');
-var puppeteer = require('puppeteer');
-var spawn = require('child_process').spawn;
+var AutoGitUpdate = require('auto-git-update');
 var app = express();
 app.use(logger('dev'));
 app.use(express.json());
@@ -50,41 +49,23 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 console.log('============== 실행 ================');
+var config = {
+    repository: 'https://github.com/kjsorolcl/update-test',
+    tempLocation: 'C:/Users/scheg/Desktop/tmp/',
+    ignoreFiles: ['util/config.js'],
+    exitOnComplete: true
+};
 var browser = null;
 var API_PWD = 'Qwar34Radf24%$^';
 var flag = 1; // 0 - m, 1 - pc
-(function () { return __awaiter(void 0, void 0, void 0, function () {
-    var _a, firstPage, response, content;
-    return __generator(this, function (_b) {
-        switch (_b.label) {
-            case 0:
-                if (!(process.platform != 'darwin')) return [3 /*break*/, 2];
-                return [4 /*yield*/, puppeteer.launch({ headless: false, ignoreHTTPSErrors: true })];
-            case 1:
-                _a = _b.sent();
-                return [3 /*break*/, 4];
-            case 2: return [4 /*yield*/, puppeteer.launch({ headless: false, ignoreHTTPSErrors: true })];
-            case 3:
-                _a = _b.sent();
-                _b.label = 4;
-            case 4:
-                browser = _a;
-                return [4 /*yield*/, browser.newPage()];
-            case 5:
-                firstPage = _b.sent();
-                return [4 /*yield*/, firstPage.goto('https://m.blog.naver.com/kjsorolcl/2225472429436', { waitUntil: 'load', timeout: 15000 }).catch(function (res) {
-                        // console.log('fails', res)
-                    })];
-            case 6:
-                response = _b.sent();
-                return [4 /*yield*/, firstPage.content()];
-            case 7:
-                content = _b.sent();
-                if (content.includes('빈프레임')) {
-                    console.log('empty');
-                }
-                return [2 /*return*/];
-        }
-    });
-}); })();
+var updater = new AutoGitUpdate(config);
+setInterval(function () {
+    return (function () { return __awaiter(void 0, void 0, void 0, function () {
+        return __generator(this, function (_a) {
+            console.log('test');
+            updater.autoUpdate();
+            return [2 /*return*/];
+        });
+    }); })();
+}, 5000);
 exports.default = app;
